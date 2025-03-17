@@ -6,15 +6,29 @@ import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 contract PUMP is ERC20, Ownable2Step {
 
+    mapping(address => bool) public isMinter;
+
+    event MinterSet(address indexed minter, bool status);
+
+    modifier onlyMinter() {
+        require(isMinter[_msgSender()], "PUMP: caller is not a minter");
+        _;
+    }
+
     constructor() ERC20("PUMP", "PUMP") Ownable(_msgSender()) {
         _mint(_msgSender(), 1_000_000_000 * 10 ** decimals());
     }
 
-    function mint(address to, uint256 amount) public onlyOwner {
+    function setMinter(address minter, bool status) public onlyOwner {
+        isMinter[minter] = status;
+        emit MinterSet(minter, status);
+    }
+
+    function mint(address to, uint256 amount) public onlyMinter {
         _mint(to, amount);
     }
 
-    function burn(uint256 amount) public onlyOwner {
+    function burn(uint256 amount) public onlyMinter {
         _burn(_msgSender(), amount);
     }
     
