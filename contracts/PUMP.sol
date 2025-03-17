@@ -15,9 +15,7 @@ contract PUMP is ERC20, Ownable2Step {
         _;
     }
 
-    constructor() ERC20("PUMP", "PUMP") Ownable(_msgSender()) {
-        _mint(_msgSender(), 1_000_000_000 * 10 ** decimals());
-    }
+    constructor() ERC20("PUMP", "PUMP") Ownable(_msgSender()) {}
 
     function setMinter(address minter, bool status) public onlyOwner {
         isMinter[minter] = status;
