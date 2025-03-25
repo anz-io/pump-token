@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/access/Ownable2Step.sol";
 
 contract PUMP is ERC20, Ownable2Step {
 
+    uint256 public constant MAX_SUPPLY = 1_000_000_000 ether;
+
     mapping(address => bool) public isMinter;
 
     event MinterSet(address indexed minter, bool status);
@@ -23,6 +25,7 @@ contract PUMP is ERC20, Ownable2Step {
     }
 
     function mint(address to, uint256 amount) public onlyMinter {
+        require(totalSupply() + amount <= MAX_SUPPLY, "PUMP: max supply reached");
         _mint(to, amount);
     }
 
